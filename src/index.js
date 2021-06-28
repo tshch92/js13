@@ -7,7 +7,7 @@ function arraysMatch(arr1, arr2) {
 }
 
 //HOMEWORK
-//это функция, которая принимает функцию в качестве аргумента и записывает ёё аргументы и результаты выполнения в Мап
+//это функция, которая принимает функцию в качестве аргумента и записывает её аргументы и результаты выполнения в Мап
 //если такие аргументы уже есть в Мапе, то она вернёт соответствующий им value (ничего заново не вычисляя)
 
 function myCache(callback) {
@@ -30,9 +30,9 @@ function myCache(callback) {
 
         const result = callback(...args);
 
-        //чтобы в Мапе всегда было не более 10 записей, я удаляю самую старую (самую первую)
+        //чтобы в Мапе всегда было не более 10 записей, я удаляю самую старую (самую первую). Как-то по-нормальному сделать у меня не получилось
 
-        if (cachedFunction.size + 1 > cacheLength) {
+        if (cachedFunction.size >= cacheLength) {
             const currentKeys = cachedFunction.keys();
             for (const k of currentKeys) {
                 cachedFunction.delete(k);
@@ -51,14 +51,6 @@ function sum(a, b) {
     return a + b;
 }
 
-/*function factorial(a, result = 1) {
-    if (a === 1) {
-        return result;
-    }
-
-    return factorial(a - 1, result * a);
-}*/
-
 const example = myCache(sum);
 
 // я хочу заполнить свой Мап для теста; если не делать через константу ffs - то линтер недоволен
@@ -67,7 +59,3 @@ const ffs = 13;
 for (let i = 1; i <= ffs; i++) {
     example(i, i);
 }
-
-//example(5, 5);
-
-//example(11, 11);
