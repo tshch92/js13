@@ -1,65 +1,73 @@
-function counter() {
+const cacheLength = 10;
 
-    let acc = 0;
+//это функция проверки равенства массивов
 
-    return function(x) {
+function arraysMatch(arr1, arr2) {
+    return arr1.length === arr2.length && arr1.every((element, i) => element === arr2[i]);
+}
 
-      return acc += x;
-    };
+//HOMEWORK
+//это функция, которая принимает функцию в качестве аргумента и записывает ёё аргументы и результаты выполнения в Мап
+//если такие аргументы уже есть в Мапе, то она вернёт соответствующий им value (ничего заново не вычисляя)
 
-};
+function myCache(callback) {
+    const cache = new Map();
 
-// let a = counter();
-// let b = counter();
-// console.log(a(7));
-// console.log(a(7));
-// console.log(b(2));
-
-
-function c() {
-
-    let acc = 0;
-    let base = acc;
-    let step = 1;
-
-    return {
-        
-        count() {
-
-            return acc += step;
-        
-        },
-
-        setup(newBase, newStep) {
-
-            base = newBase;
-            step = newStep;
-
-            console.log(`Initial value is ${base} \nStep value is ${step}`)
-
-            return acc;
-
-        },
-
-        reset() {
-
-            acc = base;
-
-            console.log('Counter has been reset to ' + base + '\nStep is equal ' + step);
-
-            return acc;
-
+    return function (...args) {
+        if (!cache.has(callback)) {
+            cache.set(callback, new Map());
         }
+
+        const cachedFunction = cache.get(callback);
+
+        //если такие ключи уже были, то вернем их значение
+
+        for (const key of cachedFunction.keys()) {
+            if (arraysMatch(args, key)) {
+                return cachedFunction.get(key);
+            }
+        }
+
+        const result = callback(...args);
+
+        //чтобы в Мапе всегда было не более 10 записей, я удаляю самую старую (самую первую)
+
+        if (cachedFunction.size + 1 > cacheLength) {
+            const currentKeys = cachedFunction.keys();
+            for (const k of currentKeys) {
+                cachedFunction.delete(k);
+                break;
+            }
+        }
+
+        cachedFunction.set(args, result);
+
+        return cache;
+    };
+}
+
+// это что-нибудь для теста
+function sum(a, b) {
+    return a + b;
+}
+
+/*function factorial(a, result = 1) {
+    if (a === 1) {
+        return result;
     }
-};
 
-var z = c();
+    return factorial(a - 1, result * a);
+}*/
 
-z.setup(100, 100);
-console.log(z.count());
-console.log(z.count());
-console.log(z.count());
-console.log(z.count());
-z.reset();
-console.log(z.count());
-console.log(z.count());
+const example = myCache(sum);
+
+// я хочу заполнить свой Мап для теста; если не делать через константу ffs - то линтер недоволен
+const ffs = 13;
+
+for (let i = 1; i <= ffs; i++) {
+    example(i, i);
+}
+
+//example(5, 5);
+
+//example(11, 11);
