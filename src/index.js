@@ -7,42 +7,36 @@ function arraysMatch(arr1, arr2) {
 }
 
 //HOMEWORK
-//это функция, которая принимает функцию в качестве аргумента и записывает её аргументы и результаты выполнения в Мап
+//это функция, которая принимает функцию в качестве аргумента, потом записывает её результаты выполнения в Мап
 //если такие аргументы уже есть в Мапе, то она вернёт соответствующий им value (ничего заново не вычисляя)
 
 function myCache(callback) {
     const cache = new Map();
 
     return function (...args) {
-        if (!cache.has(callback)) {
-            cache.set(callback, new Map());
-        }
-
-        const cachedFunction = cache.get(callback);
-
         //если такие ключи уже были, то вернем их значение
 
-        for (const key of cachedFunction.keys()) {
+        for (const key of cache.keys()) {
             if (arraysMatch(args, key)) {
-                return cachedFunction.get(key);
+                return cache.get(key);
             }
         }
 
         const result = callback(...args);
 
-        //чтобы в Мапе всегда было не более 10 записей, я удаляю самую старую (самую первую). Как-то по-нормальному сделать у меня не получилось
+        //как-то по-нормальному сделать не получилось
 
-        if (cachedFunction.size >= cacheLength) {
-            const currentKeys = cachedFunction.keys();
+        if (cache.size >= cacheLength) {
+            const currentKeys = cache.keys();
             for (const k of currentKeys) {
-                cachedFunction.delete(k);
+                cache.delete(k);
                 break;
             }
         }
 
-        cachedFunction.set(args, result);
+        cache.set(args, result);
 
-        return cache;
+        return result;
     };
 }
 
