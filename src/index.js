@@ -1,55 +1,59 @@
-const cacheLength = 10;
+const stone = {
+    brand: 'Caesarstone',
+    colorGroup: [
+        'sand',
+        'brown',
+        {
+            sparkle: true,
+        },
+    ],
+    size: {
+        height: 1400,
+        width: 3040,
+    },
+};
 
-//это функция проверки равенства массивов
+function deepFreeze(obj) {
+    let newObj = {};
 
-function arraysMatch(arr1, arr2) {
-    return arr1.length === arr2.length && arr1.every((element, i) => element === arr2[i]);
-}
+    if (Array.isArray(obj)) {
+        newObj = [];
+    }
 
-//HOMEWORK
-//это функция, которая принимает функцию в качестве аргумента, потом записывает её результаты выполнения в Мап
-//если такие аргументы уже есть в Мапе, то она вернёт соответствующий им value (ничего заново не вычисляя)
+    for (const key in obj) {
+        newObj[key] = obj[key];
 
-function myCache(callback) {
-    const cache = new Map();
-
-    return function (...args) {
-        //если такие ключи уже были, то вернем их значение
-
-        for (const key of cache.keys()) {
-            if (arraysMatch(args, key)) {
-                return cache.get(key);
-            }
+        if (typeof newObj[key] === 'object') {
+            newObj[key] = deepFreeze(newObj[key]);
+            Object.freeze(newObj[key]);
+        } else {
+            Object.defineProperty(newObj, key, {
+                writable: false,
+                enumerable: false,
+                configurable: false,
+            });
         }
+    }
 
-        const result = callback(...args);
-
-        //как-то по-нормальному сделать не получилось
-
-        if (cache.size >= cacheLength) {
-            const currentKeys = cache.keys();
-            for (const k of currentKeys) {
-                cache.delete(k);
-                break;
-            }
-        }
-
-        cache.set(args, result);
-
-        return result;
-    };
+    return newObj;
 }
 
-// это что-нибудь для теста
-function sum(a, b) {
-    return a + b;
-}
+const example = deepFreeze(stone);
+const example2 = stone;
 
-const example = myCache(sum);
+// дальше я добавляю всякие свойства к замороженному и контрольному обьектам, чтобы поосмотреть че будет
 
-// я хочу заполнить свой Мап для теста; если не делать через константу ffs - то линтер недоволен
-const ffs = 13;
+example.size.width = null;
+example2.size.width = null;
 
-for (let i = 1; i <= ffs; i++) {
-    example(i, i);
-}
+example.size.thick = 30;
+example2.size.thick = 20;
+
+//example.colorGroup.push('beige'); //он кинет ошибку что в этот массив нельзя уже запушить
+example2.colorGroup.push('beige');
+
+//example.colorGroup[2].marble = false;
+//example2.colorGroup[2].marble = false;
+
+//console.log(example);
+//console.log(example2);
