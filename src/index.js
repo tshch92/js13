@@ -11,6 +11,10 @@ const stone = {
         height: 1400,
         width: 3040,
     },
+    recommend: null,
+    area() {
+        return this.size.height * this.size.width;
+    },
 };
 
 function deepFreeze(obj) {
@@ -23,7 +27,8 @@ function deepFreeze(obj) {
     for (const key in obj) {
         newObj[key] = obj[key];
 
-        if (typeof newObj[key] === 'object') {
+        // проверку на null добавила
+        if (typeof newObj[key] === 'object' && newObj[key] !== null) {
             newObj[key] = deepFreeze(newObj[key]);
             Object.freeze(newObj[key]);
         } else {
@@ -54,6 +59,9 @@ example2.colorGroup.push('beige');
 
 //example.colorGroup[2].marble = false;
 //example2.colorGroup[2].marble = false;
+
+example.recommend = true;
+example2.recommend = true;
 
 //console.log(example);
 //console.log(example2);
