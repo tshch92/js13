@@ -1,67 +1,28 @@
-const stone = {
-    brand: 'Caesarstone',
-    colorGroup: [
-        'sand',
-        'brown',
-        {
-            sparkle: true,
-        },
-    ],
-    size: {
-        height: 1400,
-        width: 3040,
-    },
-    recommend: null,
-    area() {
-        return this.size.height * this.size.width;
-    },
-};
+'use strict';
 
-function deepFreeze(obj) {
-    let newObj = {};
+const tableWidth = 10;
+const tableHeight = 10;
 
-    if (Array.isArray(obj)) {
-        newObj = [];
+const $myTable = document.querySelector('.my-table');
+
+let $tbl = document.createElement('table');
+
+let $tblBody = document.createElement('tbody');
+
+for (let i = 0; i < tableHeight; i++) {
+    let $tblRow = document.createElement('tr');
+
+    let $tblCell = document.createElement('td');
+    for (let j = 0; j < tableWidth; j++) {
+        $tblCell.textContent = i * tableWidth + j;
+        $tblRow.innerHTML += $tblCell.outerHTML;
     }
 
-    for (const key in obj) {
-        newObj[key] = obj[key];
-
-        // проверку на null добавила
-        if (typeof newObj[key] === 'object' && newObj[key] !== null) {
-            newObj[key] = deepFreeze(newObj[key]);
-            Object.freeze(newObj[key]);
-        } else {
-            Object.defineProperty(newObj, key, {
-                writable: false,
-                enumerable: false,
-                configurable: false,
-            });
-        }
-    }
-
-    return newObj;
+    $tblBody.innerHTML += $tblRow.outerHTML;
 }
 
-const example = deepFreeze(stone);
-const example2 = stone;
+$tbl.innerHTML += $tblBody.outerHTML;
 
-// дальше я добавляю всякие свойства к замороженному и контрольному обьектам, чтобы поосмотреть че будет
+$myTable.innerHTML += $tbl.outerHTML;
 
-example.size.width = null;
-example2.size.width = null;
-
-example.size.thick = 30;
-example2.size.thick = 20;
-
-//example.colorGroup.push('beige'); //он кинет ошибку что в этот массив нельзя уже запушить
-example2.colorGroup.push('beige');
-
-//example.colorGroup[2].marble = false;
-//example2.colorGroup[2].marble = false;
-
-example.recommend = true;
-example2.recommend = true;
-
-//console.log(example);
-//console.log(example2);
+console.log($myTable);
