@@ -9,14 +9,14 @@ const tableHeight = 10;
 
 const $myList = document.querySelector('.my-list');
 
-function cascade(arr) {
+function generateList(arr) {
     let $ul = document.createElement('ul');
 
     arr.forEach(element => {
         let $li = document.createElement('li');
 
         if (Array.isArray(element)) {
-            $li.innerHTML += cascade(element);
+            $li.innerHTML += generateList(element);
         } else {
             $li.textContent = element;
         }
@@ -27,7 +27,7 @@ function cascade(arr) {
     return $ul.outerHTML;
 }
 
-$myList.innerHTML += cascade(example);
+$myList.innerHTML += generateList(example);
 
 //creating a table 
 
