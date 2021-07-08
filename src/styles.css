@@ -1,10 +1,10 @@
-table {
+.my-table table {
     border: 1px solid black;
     width: 100%;
     height: 90vh;
 }
 
-td {
+.my-table td {
     border: 1px solid black;
     text-align: center;
     vertical-align: middle;
