@@ -10,10 +10,10 @@ const tableHeight = 10;
 const $myList = document.querySelector('.my-list');
 
 function generateList(arr) {
-    let $ul = document.createElement('ul');
+    const $ul = document.createElement('ul');
 
     arr.forEach(element => {
-        let $li = document.createElement('li');
+        const $li = document.createElement('li');
 
         if (Array.isArray(element)) {
             $li.innerHTML += generateList(element);
@@ -29,18 +29,18 @@ function generateList(arr) {
 
 $myList.innerHTML += generateList(example);
 
-//creating a table 
+//creating a table
 
 const $myTable = document.querySelector('.my-table');
 
-let $tbl = document.createElement('table');
+const $tbl = document.createElement('table');
 
-let $tblBody = document.createElement('tbody');
+const $tblBody = document.createElement('tbody');
 
 for (let i = 0; i < tableHeight; i++) {
-    let $tblRow = document.createElement('tr');
+    const $tblRow = document.createElement('tr');
 
-    let $tblCell = document.createElement('td');
+    const $tblCell = document.createElement('td');
 
     for (let j = 0; j < tableWidth; j++) {
         $tblCell.textContent = i * tableWidth + j + 1;
